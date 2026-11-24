@@ -77,6 +77,14 @@
       "default": 1,
       "min": 0,
       "max": 7
+    },
+    {
+      "key": "base_run_id",
+      "label": "中心来源任务（已批准任务编号，留空则重新分群）",
+      "type": "int",
+      "optional": true,
+      "min": 1,
+      "default": null
     }
   ],
   "recipient": "夜班能源调度",

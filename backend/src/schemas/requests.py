@@ -28,3 +28,11 @@ class Delivery(BaseModel):
     recipient: str = Field(min_length=2, max_length=100)
     cadence: Literal['once', 'daily']
     scheduled_at: datetime | None = None
+
+
+class Meter(BaseModel):
+    depot: str = Field(min_length=1, max_length=40)
+    batch: str = Field(min_length=10, max_length=10)
+    energy_kwh: float = Field(ge=0, le=1_000_000, allow_inf_nan=False)
+    tolerance_kwh: float = Field(ge=0, le=1_000_000, allow_inf_nan=False)
+    issued_at: datetime | None = None

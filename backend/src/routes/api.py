@@ -4,12 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 
 from src.config.settings import ARTIFACTS
 from src.constants.enums import Role
-from src.controllers.query import delivery_status, jobs, recent_activity, require_row, revisions
+from src.controllers.query import delivery_status, jobs, meter_status, recent_activity, require_row, revisions
 from src.models.tables import datasets, runs
-from src.schemas.requests import Delivery, Import, Login, Review, Run
+from src.schemas.requests import Delivery, Import, Login, Meter, Review, Run
 from src.services.data import PROFILE, csv_records, save_revision
 from src.services.domain import sample_rows
-from src.services.workflow import add_run, cancel_schedule, review_run, schedule_report
+from src.services.workflow import add_run, cancel_schedule, record_meter, review_run, schedule_report
 from src.utils.exports import write_csv
 from src.utils.security import allowed, authenticate, signed_in
 
@@ -53,6 +53,16 @@ def get_dataset(key: int, account=Depends(signed_in)):
     dataset = require_row(datasets, key, '数据版本')
     records = dataset.pop('records')
     return {**dataset, 'count': len(records), 'records': records[:100]}
+
+
+@router.get('/meters')
+def list_meters(account=Depends(signed_in)):
+    return meter_status()
+
+
+@router.post('/meters', status_code=201)
+def register_meter(body: Meter, account=Depends(analyst)):
+    return record_meter(body, account['username'])
 
 
 @router.post('/datasets', status_code=201)

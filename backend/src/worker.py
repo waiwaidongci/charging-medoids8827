@@ -5,16 +5,24 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from src.config.settings import ARTIFACTS
-from src.models.database import cache
-from src.services.domain import compute
-from src.services.workflow import claim_run, finish_run, publish_due
+from src.models.database import cache, engine
+from src.services.domain import compute, reconcile
+from src.services.workflow import claim_run, current_meters, finish_run, load_centers, publish_due
 from src.utils.exports import write_csv
 
 
 def calculate(job):
     key, claim, rows, options = job
     try:
-        report = compute(rows, options)
+        base_id = options.get('base_run_id')
+        if base_id is None:
+            report = compute(rows, options)
+        else:
+            with engine.connect() as connection:
+                centers, base_options = load_centers(connection, base_id)
+                meters = current_meters(connection)
+            merged = {**options, 'warp_band': base_options.get('warp_band', options.get('warp_band'))}
+            report = reconcile(rows, merged, centers, meters, base_id)
         report['columns'] = list(dict.fromkeys(key for row in report['rows'] for key in row))
         report['metric_order'] = list(report['metrics'])
         json.dumps(report, allow_nan=False)

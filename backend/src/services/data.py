@@ -17,6 +17,8 @@ PROFILE = json.loads(Path(__file__).with_name('domain.json').read_text(encoding=
 
 def convert(value, field):
     if value is None or isinstance(value, bool) or str(value).strip() == '':
+        if field.get('optional'):
+            return None
         raise ValueError('不能为空')
     kind = field['type']
     if kind == 'str':
