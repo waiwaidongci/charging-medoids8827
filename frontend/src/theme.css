@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Chivo:wght@400;600;700&family=Barlow+Condensed&display=swap');
+:root {
+  --text-font: 'Chivo'; --title-font: 'Barlow Condensed';
+  --paper: oklch(.975 .012 169); --surface: oklch(.994 .006 169);
+  --ink: oklch(.235 .035 169); --quiet: oklch(.435 .038 169);
+  --stripe: oklch(.961 .014 169); --rule: oklch(.858 .024 169);
+  --accent: oklch(.445 0.102 169); --button-ink: oklch(.98 .007 169);
+  --focus: oklch(.64 0.102 169);
+  --side: oklch(.923 .029 169);
+  --side-ink: oklch(.255 .033 169);
+  --highlight: oklch(.866 .045 169);
+  --highlight-edge: oklch(.49 .10 169);
+  --side-width: 230px; --side-pad: 1.65rem;
+  --login-ratio: 1.35fr; --report-stripe: 5px;
+}
